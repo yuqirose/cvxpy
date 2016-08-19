@@ -35,22 +35,27 @@ class unfold(AffAtom):
 
     @AffAtom.numpy_numeric
     def numeric(self, values):
-        """Reshape the value.
+        """Unfold the value.
         """
-        return np.reshape(values[0], (self.rows, self.cols), "F")
+        ndim = len(self.shape)
+        perm_order = np.roll(np.arange(ndim),self.mode-1)
+        return np.reshape(np.transpose(values[0], perm_order), [self.shape[self.mode-1],-1],"F")
+        #return np.reshape(values[0], (self.rows, self.cols), "F")
 
     def validate_arguments(self):
         """Checks that the new shape has the same number of entries as the old.
         """
-        old_len = self.args[0].size[0]*self.args[0].size[1]
+        old_len = np.prod(self.args[0].shape)
         new_len = self.rows*self.cols
         if not old_len == new_len:
+            print old_len
+            print new_len
             raise ValueError(
                 "Invalid reshape dimensions (%i, %i)." % (self.rows, self.cols)
             )
 
     def size_from_args(self):
-        """Returns the shape from the rows, cols arguments.
+        """Returns the shape from the arguments.
         """
         return (self.rows, self.cols)
 
@@ -60,7 +65,7 @@ class unfold(AffAtom):
         return [self.rows, self.cols]
 
     @staticmethod
-    def graph_implementation(arg_objs, size, data=None):
+    def graph_implementation(arg_objs, size, mode, data=None):
         """Convolve two vectors.
 
         Parameters
@@ -77,4 +82,4 @@ class unfold(AffAtom):
         tuple
             (LinOp for objective, list of constraints)
         """
-        return (lu.reshape(arg_objs[0], size), [])
+        return (lu.unfold(arg_objs[0], size, mode), [])

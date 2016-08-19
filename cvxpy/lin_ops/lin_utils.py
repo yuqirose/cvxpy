@@ -392,6 +392,23 @@ def reshape(operator, size):
     """
     return lo.LinOp(lo.RESHAPE, size, [operator], None)
 
+def unfold(operator, size, mode):
+    """Unfold an operator along mode.
+
+    Parameters
+    ----------
+    operator : LinOp
+        The operator to reshape.
+    size : tuple
+        The shape of the reshaped operator.
+    mode: 
+    
+    Returns
+    -------
+    LinOp
+       LinOp representing the reshaped expression.
+    """
+    return lo.LinOp(lo.UNFOLD, size, mode, [operator], None)
 
 def diag_vec(operator):
     """Converts a vector to a diagonal matrix.

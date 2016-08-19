@@ -39,8 +39,13 @@ class Constant(Leaf):
         else:
             if isinstance(value, np.ndarray) and len(value.shape) == 1:
                 self.is_1D_array = True
-            self._value = intf.DEFAULT_INTF.const_to_matrix(value)
+            elif isinstance(value, np.ndarray) and len(value.shape) == 2:
+                self._value = intf.DEFAULT_INTF.const_to_matrix(value)
+            else:
+                self._value = intf.DEFAULT_NP_INTF.const_to_matrix(value)
+
             self._sparse = False
+    
         # Set DCP attributes.
         self._size = intf.size(self.value)
         self._is_pos, self._is_neg = intf.sign(self.value)

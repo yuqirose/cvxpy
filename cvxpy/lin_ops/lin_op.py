@@ -65,6 +65,9 @@ TRACE = "trace"
 # An expression cast into a different shape.
 # Data: None
 RESHAPE = "reshape"
+# Unfold a tensor into a matrix.
+# Data: None
+UNFOLD = "unfold"
 # Converts a vector to a diagonal matrix.
 # Data: None
 DIAG_VEC = "diag_vec"
