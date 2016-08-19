@@ -80,8 +80,12 @@ class Leaf(expression.Expression):
             The value converted to the proper matrix type.
         """
         if val is not None:
-            # Convert val to the proper matrix type.
-            val = intf.DEFAULT_INTF.const_to_matrix(val)
+            # Convert val to tensor
+            if len(val.shape)>2:
+                val = intf.DEFAULT_NP_INTF.const_to_matrix(val)
+            else:
+                # Convert val to the proper matrix type.
+                val = intf.DEFAULT_INTF.const_to_matrix(val)
             size = intf.size(val)
             if size != self.size:
                 raise ValueError(

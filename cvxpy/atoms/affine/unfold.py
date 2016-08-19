@@ -28,24 +28,24 @@ class unfold(AffAtom):
     The entries are stored in column-major order.
     """
 
-    def __init__(self, expr, shape, mode):
-        self.rows = shape[mode]
-        self.cols = np.prod(shape)/shape[mode]
+    def __init__(self, expr, size, mode):
+        self.rows = size[mode]
+        self.cols = np.prod(size)/size[mode]
         super(unfold, self).__init__(expr)
 
     @AffAtom.numpy_numeric
     def numeric(self, values):
         """Unfold the value.
         """
-        ndim = len(self.shape)
+        ndim = len(self.size)
         perm_order = np.roll(np.arange(ndim),self.mode-1)
-        return np.reshape(np.transpose(values[0], perm_order), [self.shape[self.mode-1],-1],"F")
+        return np.reshape(np.transpose(values[0], perm_order), [self.size[self.mode-1],-1],"F")
         #return np.reshape(values[0], (self.rows, self.cols), "F")
 
     def validate_arguments(self):
         """Checks that the new shape has the same number of entries as the old.
         """
-        old_len = np.prod(self.args[0].shape)
+        old_len = np.prod(self.args[0].size)
         new_len = self.rows*self.cols
         if not old_len == new_len:
             print old_len

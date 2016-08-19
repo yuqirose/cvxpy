@@ -1,6 +1,6 @@
 """
 Copyright 2013 Steven Diamond
-
+August 2016 Rose Yu: Added ndarray support 
 This file is part of CVXPY.
 
 CVXPY is free software: you can redistribute it and/or modify
@@ -22,30 +22,32 @@ def sum_shapes(shapes):
     """Give the shape resulting from summing a list of shapes.
 
     Args:
-        shapes: A list of (row, col) tuples.
+        shapes: A list of shape tuples.
 
     Returns:
-        The shape (row, col) shape of the sum.
+        The shape of the sum.
     """
-    rows = max([shape[0] for shape in shapes])
-    cols = max([shape[1] for shape in shapes])
+    out_shape = ()
+    ndim = len(shapes[0])
+    for n in range(ndim):
+        out_shape += (max([shape[n] for shape in shapes]),)
     # Validate shapes.
     for shape in shapes:
-        if not shape == (1, 1) and shape != (rows, cols):
+        if not shape == (1, 1) and out_shape != shape:
             raise ValueError(
                 "Incompatible dimensions" + len(shapes)*" %s" % tuple(shapes))
-    return (rows, cols)
+    return out_shape
 
 
 def mul_shapes(lh_shape, rh_shape):
-    """Give the shape resulting from multiplying two shapes.
+    """Give the shape resulting from multiplying two shapes (matrices).
 
     Args:
-        lh_shape: A (row, col) tuple.
-        rh_shape: A (row, col) tuple.
+        lh_shape: A shape tuple.
+        rh_shape: A shape tuple.
 
     Returns:
-        The shape (row, col) shape of the product.
+        The shape of the multiplication.
     """
     if lh_shape == (1, 1):
         return rh_shape

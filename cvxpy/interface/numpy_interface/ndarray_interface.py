@@ -30,14 +30,14 @@ class NDArrayInterface(base.BaseMatrixInterface):
     TARGET_MATRIX = numpy.ndarray
 
     def const_to_matrix(self, value, convert_scalars=False):
-        """Convert an arbitrary value into a matrix of type self.target_matrix.
+        """Convert an arbitrary value into an array
 
         Args:
             value: The constant to be converted.
             convert_scalars: Should scalars be converted?
 
         Returns:
-            A matrix of type self.target_matrix or a scalar.
+            A ndarray of type self.target_matrix or a scalar.
         """
         if isinstance(value, list):
             value = numpy.atleast_2d(value)
@@ -52,19 +52,16 @@ class NDArrayInterface(base.BaseMatrixInterface):
     def identity(self, size):
         return numpy.eye(size)
 
-    # Return the dimensions of the matrix.
-    def size(self, matrix):
+    # Return the dimensions of the array.
+    def size(self, array):
         # Scalars.
-        if len(matrix.shape) == 0:
+        if len(array.shape) == 0:
             return (1, 1)
         # 1D arrays are treated as column vectors.
-        elif len(matrix.shape) == 1:
-            return (int(matrix.size), 1)
-        # 2D arrays.
-        else:
-            rows = int(matrix.shape[0])
-            cols = int(matrix.shape[1])
-            return (rows, cols)
+        elif len(array.shape) == 1:
+            return (int(array.size), 1)
+        # ND arrays.
+        return numpy.shape(array)
 
     # Get the value of the passed matrix, interpreted as a scalar.
     def scalar_value(self, matrix):

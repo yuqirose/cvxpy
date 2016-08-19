@@ -129,6 +129,7 @@ def size(constant):
             return (len(constant), 1)
         else:  # Matrix
             return (len(constant[0]), len(constant))
+    # Add support for tensor 
     elif constant.__class__ in INTERFACES:
         return INTERFACES[constant.__class__].size(constant)
     # Direct all sparse matrices to CSC interface.

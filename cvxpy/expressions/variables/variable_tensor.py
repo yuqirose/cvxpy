@@ -29,9 +29,8 @@ class VariableTensor(Leaf):
     # name - unique identifier.
     # size - variable size.
 
-    def __init__(self, shape=None, name=None):
-        self._shape = shape
-        self._size = np.prod(shape)        
+    def __init__(self, size=None, name=None):
+        self._size = size
         self.id = lu.get_id()
         if name is None:
             self._name = "%s%d" % (s.VAR_PREFIX, self.id)
@@ -51,13 +50,8 @@ class VariableTensor(Leaf):
         return False
 
     @property
-    def shape(self):
-        """Returns the dimensions of the expression.
-        """
-        return self._shape
-    
     def size(self):
-        """Returns the total number of the expression.
+        """Returns the dimensions of the expression.
         """
         return self._size
 
@@ -107,10 +101,10 @@ class VariableTensor(Leaf):
         Returns:
             A tuple of (affine expression, [constraints]).
         """
-        obj = lu.create_var(self.shape, self.id)
+        obj = lu.create_var(self.size, self.id)
         return (obj, [])
 
     def __repr__(self):
         """String to recreate the object.
         """
-        return "Variable(%d, %d, %d)" % self.shape
+        return "Variable(%d, %d, %d)" % self.size
